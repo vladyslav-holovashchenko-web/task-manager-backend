@@ -1,33 +1,25 @@
-import {
-  Controller,
-  Post,
-  Body,
-  UseGuards,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Controller, Post, UseGuards, Get, Req } from '@nestjs/common';
+import { Request } from 'express';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
-import { LoginUserDto } from 'src/users/dto/login-user.dto';
+import { LocalAuthGuard } from './local.guard';
+import { User } from 'src/users/entities/user.entity';
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('login')
-  async login(@Body() loginDto: LoginUserDto) {
-    const user = await this.authService.validateUser(
-      loginDto.email,
-      loginDto.password,
-    );
-    if (!user) {
-      throw new UnauthorizedException('Invalid credentials');
-    }
-    return this.authService.login(user);
+  @UseGuards(LocalAuthGuard)
+  login(@Req() req: Request) {
+    console.log('req', req);
+
+    return req.user;
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post('protected')
-  async protectedRoute() {
-    return 'This route is protected';
+  @Get('status')
+  status(@Req() req: Request<unknown, User>) {
+    return req.user;
   }
 }

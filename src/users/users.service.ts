@@ -21,13 +21,6 @@ export class UsersService {
     return this.userRepository.save(newUser);
   }
 
-  async validatePassword(
-    password: string,
-    hashedPassword: string,
-  ): Promise<boolean> {
-    return bcrypt.compare(password, hashedPassword);
-  }
-
   async findUserByEmail(email: string): Promise<User | null> {
     return this.userRepository.findOneBy({ email });
   }
