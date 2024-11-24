@@ -2,8 +2,9 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
-import { UsersService } from '../users/users.service';
-import { User } from '../users/entities/user.entity';
+import { UsersService } from '../../users/users.service';
+import { User } from '../../users/entities/user.entity';
+import { JwtPayload } from '../interfaces/jwt-payload.interface';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -18,16 +19,17 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload): Promise<Omit<User, 'password'>> {
-    const { email } = payload;
+  async validate(payload: JwtPayload): Promise<Omit<User, 'password'>> {
+    const { email, sub } = payload;
 
-    const user = await this.usersService.findUserByEmail(email);
+    const user = sub
+      ? await this.usersService.findUserById(+sub)
+      : await this.usersService.findUserByEmail(email);
 
     if (!user) {
       throw new UnauthorizedException('Invalid token');
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...result } = user;
     return result;
   }
