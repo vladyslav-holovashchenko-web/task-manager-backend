@@ -5,19 +5,21 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { LocalAuthGuard } from './guards/local.guard';
 import { User } from 'src/users/entities/user.entity';
 
+type AuthReq = Request & { user: User };
+
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(@Req() req: Request & { user: User }) {
+  async login(@Req() req: AuthReq) {
     return this.authService.login(req.user);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('status')
-  status(@Req() req: Request & { user: User }) {
+  status(@Req() req: AuthReq) {
     return {
       message: 'User is authenticated',
       user: req.user,
