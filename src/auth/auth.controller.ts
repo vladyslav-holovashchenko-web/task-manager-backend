@@ -5,7 +5,7 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { LocalAuthGuard } from './guards/local.guard';
 import { User } from 'src/users/entities/user.entity';
 
-type AuthReq = Request & { user: User };
+export type AuthReq = Request & { user: User };
 
 @Controller('auth')
 export class AuthController {
