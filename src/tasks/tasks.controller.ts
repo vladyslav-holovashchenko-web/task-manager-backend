@@ -17,7 +17,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { AuthReq } from 'src/auth/auth.controller';
 
 @Controller('tasks')
-@UseGuards(JwtAuthGuard) // Protect all routes with JWT Guard
+@UseGuards(JwtAuthGuard)
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 

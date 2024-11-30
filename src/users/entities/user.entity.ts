@@ -1,4 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { Task } from '../../tasks/entities/task.entity';
 
 @Entity()
@@ -14,6 +15,15 @@ export class User {
 
   @Column({ default: true })
   isActive: boolean;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @Column({ nullable: true })
+  refreshToken: string;
 
   @OneToMany(() => Task, (task) => task.user)
   tasks: Task[];

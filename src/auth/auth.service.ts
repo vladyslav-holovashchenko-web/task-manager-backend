@@ -26,10 +26,24 @@ export class AuthService {
     return null;
   }
 
-  async login(user: User): Promise<{ access_token: string }> {
+  async login(
+    user: User,
+  ): Promise<{ access_token: string; refresh_token: string }> {
     const payload = { email: user.email, sub: user.id };
+
+    const accessToken = this.jwtService.sign(payload, {
+      expiresIn: '15m',
+    });
+
+    const refreshToken = this.jwtService.sign(payload, {
+      expiresIn: '7d',
+    });
+
+    await this.usersService.refresh(refreshToken);
+
     return {
-      access_token: this.jwtService.sign(payload),
+      access_token: accessToken,
+      refresh_token: refreshToken,
     };
   }
 }
