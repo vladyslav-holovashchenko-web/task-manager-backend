@@ -39,11 +39,42 @@ export class AuthService {
       expiresIn: '7d',
     });
 
-    await this.usersService.refresh(refreshToken);
+    await this.updateRefreshToken(user.id, refreshToken);
 
     return {
       access_token: accessToken,
       refresh_token: refreshToken,
     };
+  }
+
+  async refresh(refreshToken: string): Promise<{ access_token: string }> {
+    try {
+      const payload = this.jwtService.verify(refreshToken, {
+        secret: process.env.JWT_REFRESH_SECRET,
+      });
+
+      const user = await this.usersService.findUserById(payload.sub);
+
+      if (!user || user.refreshToken !== refreshToken) {
+        throw new Error('Invalid refresh token');
+      }
+
+      const newAccessToken = this.jwtService.sign(
+        { email: user.email, sub: user.id },
+        { expiresIn: '15m' },
+      );
+
+      return { access_token: newAccessToken };
+    } catch (err) {
+      throw new Error('Invalid or expired refresh token');
+    }
+  }
+
+  async updateRefreshToken(id: number, refreshToken: string): Promise<void> {
+    const user = await this.usersService.findUserById(id);
+    if (user) {
+      user.refreshToken = refreshToken;
+      await this.usersService.updateRefreshToken(user);
+    }
   }
 }
