@@ -14,7 +14,10 @@ import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { AuthReq } from 'src/auth/auth.controller';
+import { User } from 'src/users/entities/user.entity';
+export interface AuthReq extends Request {
+  user: User;
+}
 
 @Controller('tasks')
 @UseGuards(JwtAuthGuard)
