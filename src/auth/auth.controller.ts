@@ -45,8 +45,9 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(@Req() loginUserDto: User, @Res() res: Response) {
+  async login(@Req() loginUserDto: Request, @Res() res: Response) {
     const tokens = await this.authService.login(loginUserDto);
+    console.log('loginUserDto ', loginUserDto.body);
 
     res.cookie('refreshToken', tokens.refresh_token, {
       httpOnly: true,

@@ -6,6 +6,8 @@ import { DataSource } from 'typeorm';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { TasksModule } from './tasks/tasks.module';
+import { TeamsModule } from './teams/teams.module';
+import { TaskBoardsModule } from './task-boards/task-boards.module';
 
 @Module({
   imports: [
@@ -19,6 +21,8 @@ import { TasksModule } from './tasks/tasks.module';
     UsersModule,
     AuthModule,
     TasksModule,
+    TeamsModule,
+    TaskBoardsModule,
   ],
   providers: [],
   controllers: [],

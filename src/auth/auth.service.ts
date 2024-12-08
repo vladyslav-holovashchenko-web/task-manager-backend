@@ -20,7 +20,7 @@ export class AuthService {
   }
 
   async login(
-    user: User,
+    user: any,
   ): Promise<{ access_token: string; refresh_token: string }> {
     const accessToken = this.generateAccessToken(user);
     const refreshToken = this.generateRefreshToken(user);
@@ -31,7 +31,11 @@ export class AuthService {
   }
 
   generateAccessToken(user: User): string {
-    const payload = { email: user.email, sub: user.id };
+    const payload = {
+      email: user.email,
+      sub: user.id,
+      username: user.username,
+    };
     return this.jwtService.sign(payload, {
       secret: process.env.JWT_ACCESS_SECRET,
       expiresIn: '15m',
