@@ -37,7 +37,7 @@ export class TasksController {
 
   @Get(':id')
   findOne(@Param('id') id: string, @Req() req: AuthReq) {
-    return this.tasksService.findOne(+id, req.user);
+    return this.tasksService.findOne(id, req.user);
   }
 
   @Patch(':id')
@@ -46,11 +46,11 @@ export class TasksController {
     @Body() updateTaskDto: UpdateTaskDto,
     @Req() req: AuthReq,
   ) {
-    return this.tasksService.update(+id, updateTaskDto, req.user);
+    return this.tasksService.update(id, updateTaskDto, req.user);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string, @Req() req: AuthReq) {
-    return this.tasksService.remove(+id, req.user);
+    return this.tasksService.remove(id, req.user);
   }
 }

@@ -27,7 +27,7 @@ export class TasksService {
     return tasks;
   }
 
-  async findOne(id: number, user: User) {
+  async findOne(id: string, user: User) {
     const task = await this.tasksRepository.findOneBy({ id, user });
     if (!task)
       throw new NotFoundException(
@@ -36,7 +36,7 @@ export class TasksService {
     return task;
   }
 
-  async update(id: number, updateTaskDto: UpdateTaskDto, user: User) {
+  async update(id: string, updateTaskDto: UpdateTaskDto, user: User) {
     const task = await this.tasksRepository.findOneBy({ id, user });
     if (!task)
       throw new NotFoundException(
@@ -46,7 +46,7 @@ export class TasksService {
     return this.tasksRepository.save(task);
   }
 
-  async remove(id: number, user: User) {
+  async remove(id: string, user: User) {
     const task = await this.tasksRepository.findOneBy({
       id,
       user,

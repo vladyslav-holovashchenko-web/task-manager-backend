@@ -1,26 +1,33 @@
 import { Injectable } from '@nestjs/common';
 import { CreateTaskBoardDto } from './dto/create-task-board.dto';
 import { UpdateTaskBoardDto } from './dto/update-task-board.dto';
+import { TaskBoard } from './entities/task-board.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class TaskBoardsService {
+  constructor(
+    @InjectRepository(TaskBoard)
+    private tasksBoardRepository: Repository<TaskBoard>,
+  ) {}
   create(createTaskBoardDto: CreateTaskBoardDto) {
-    return 'This action adds a new taskBoard';
+    return this.tasksBoardRepository.create(createTaskBoardDto);
   }
 
   findAll() {
-    return `This action returns all taskBoards`;
+    return this.tasksBoardRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} taskBoard`;
+  findOne(id: string) {
+    return this.tasksBoardRepository.findOneBy({ id });
   }
 
-  update(id: number, updateTaskBoardDto: UpdateTaskBoardDto) {
-    return `This action updates a #${id} taskBoard`;
+  update(id: string, updateTaskBoardDto: UpdateTaskBoardDto) {
+    return this.tasksBoardRepository.update(id, updateTaskBoardDto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} taskBoard`;
+  remove(id: string) {
+    return this.tasksBoardRepository.delete({ id });
   }
 }
